@@ -49,6 +49,7 @@ void InitEditor()
 void UpdateEditor(Vector2 position)
 {
     
+
 }
 
 void DrawEditor(Vector2 position)
