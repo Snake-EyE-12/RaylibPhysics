@@ -7,6 +7,8 @@
 #include "render.h"
 #include "editor.h"
 #include "spring.h"
+#include "collision.h"
+#include "contact.h"
 
 #include <stdlib.h>
 #include <assert.h>
@@ -41,12 +43,12 @@ int main(void)
 		if (selectedBody)
 		{
 			Vector2 screen = ConvertWorldToScreen(selectedBody->position);
-			DrawCircleLines(screen.x, screen.y, ConvertWorldToPixel(selectedBody->mass) + 5, YELLOW);
+			DrawCircleLines(screen.x, screen.y, ConvertWorldToPixel(selectedBody->mass * 0.5f) + 5, YELLOW);
 		}
 
 
 		// Create body
-		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && IsKeyDown(KEY_LEFT_CONTROL)))
 		{
 			int bodyCount = GetRandomValue(100, 200);
 			bodyCount = 1;
@@ -54,8 +56,9 @@ int main(void)
 			{
 				ncBody* body = CreateBody(ConvertScreenToWorld(position), ncEditorData.MassMinSliderValue, ncEditorData.BodyTypeDropdownActive);
 				body->damping = 0;//0.5f;
-				body->gravityScale = 0;
+				body->gravityScale = ncEditorData.GravityScaleSliderValue;
 				body->color = GREEN;
+				body->restitution = 0.3f;
 				AddBody(body);
 			}
 			//CreateRandomFirework(position);
@@ -88,6 +91,33 @@ int main(void)
 			Step(body, dt);
 		}
 
+		//collision
+		ncContact_t* contacts = NULL;
+		CreateContacts(ncBodies, &contacts);
+		SeparateContacts(contacts);
+		ResolveContacts(contacts);
+
+		//render
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		BeginDrawing();
 		ClearBackground(BLACK);
 
@@ -104,7 +134,13 @@ int main(void)
 		for (ncBody* body = ncBodies; body; body = body->next)
 		{
 			Vector2 screen = ConvertWorldToScreen(body->position);
-			DrawCircle(screen.x, screen.y, ConvertWorldToPixel(body->mass), body->color);
+			DrawCircle(screen.x, screen.y, ConvertWorldToPixel(body->mass * 0.5f), body->color);
+		}
+		// draw contacts
+		for (ncContact_t* contact = contacts; contact; contact = contact->next)
+		{
+			Vector2 screen = ConvertWorldToScreen(contact->body1->position);
+			DrawCircle(screen.x, screen.y, ConvertWorldToPixel(contact->body1->mass * 0.5f), RED);
 		}
 		// draw springs
 		for (ncSpring_t* spring = ncSprings; spring; spring = spring->next)

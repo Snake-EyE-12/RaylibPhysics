@@ -56,7 +56,7 @@ void ApplySpringForce(ncSpring_t* springs)
 
 		float length = Vector2Length(direction);
 		float x = length - spring->restLength;
-		float force = x * spring->k;
+		float force = x * spring->k; // k should be negative
 
 		Vector2 ndirection = Vector2Normalize(direction);
 

@@ -31,6 +31,8 @@ typedef struct ncBody
 	float gravityScale;
 	float damping;
 
+	float restitution;
+
 	struct ncBody* next;
 	struct ncBody* prev;
 
@@ -48,7 +50,7 @@ inline void ApplyForce(ncBody* body, Vector2 force, ncForceMode forceMode)
 		break;
 	case FM_IMPLUSE:
 		// applies a sudden change in momentum
-		body->velocity = Vector2Scale(force, body->inverseMass);
+		body->velocity = Vector2Add(Vector2Scale(force, body->inverseMass), body->velocity);
 		break;
 	case FM_VELOCITY:
 		body->velocity = force;
