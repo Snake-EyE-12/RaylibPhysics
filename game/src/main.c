@@ -19,6 +19,9 @@ int main(void)
 	ncBody* selectedBody = NULL;
 	ncBody* connectBody = NULL;
 
+	float fixedTimestep = 1.0f / 50;
+	float timeAccumulator = 0;
+
 	InitWindow(1920, 1080, "Physics Engine");
 	InitEditor();
 	SetTargetFPS(60);
@@ -85,17 +88,28 @@ int main(void)
 		ApplyGravitation(ncBodies, ncEditorData.GravitationSliderValue);
 		ApplySpringForce(ncSprings);
 
-		// update bodies
-		for (ncBody* body = ncBodies; body; body = body->next)
-		{
-			Step(body, dt);
-		}
-
-		//collision
+		timeAccumulator += dt;
 		ncContact_t* contacts = NULL;
-		CreateContacts(ncBodies, &contacts);
-		SeparateContacts(contacts);
-		ResolveContacts(contacts);
+		while (timeAccumulator >= fixedTimestep)
+		{
+			timeAccumulator -= fixedTimestep;
+
+
+			// update bodies
+			for (ncBody* body = ncBodies; body; body = body->next)
+			{
+				Step(body, dt);
+			}
+
+			//collision
+			
+			//DestroyAllContacts(contacts);
+			CreateContacts(ncBodies, &contacts);
+			SeparateContacts(contacts);
+			ResolveContacts(contacts);
+
+
+		}
 
 		//render
 
