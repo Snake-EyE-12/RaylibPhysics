@@ -103,7 +103,9 @@ int main(void)
 
 			//collision
 			
+
 			//DestroyAllContacts(contacts);
+			contacts = NULL;
 			CreateContacts(ncBodies, &contacts);
 			SeparateContacts(contacts);
 			ResolveContacts(contacts);
