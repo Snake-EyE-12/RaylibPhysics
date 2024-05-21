@@ -66,3 +66,21 @@ void DestroyBody(ncBody* body)
 	//Free the body
 	free(body);
 }
+
+
+// Made By AI
+void DestroyAllBodies()
+{
+	if (!ncBodies) return;
+
+	ncBody* body = ncBodies;
+	ncBody* temp;
+
+	while (body) {
+		temp = body->next;
+		free(body);
+		body = temp;
+	}
+
+	ncBodies = NULL;
+}

@@ -64,3 +64,20 @@ void ApplySpringForce(ncSpring_t* springs)
 		ApplyForce(spring->body2, Vector2Scale(ndirection, -force), FM_FORCE);
 	}
 }
+
+
+void DestroyAllSprings()
+{
+	if (!ncSprings) return;
+
+	ncSpring_t* spring = ncSprings;
+	ncBody* temp;
+
+	while (spring) {
+		temp = spring->next;
+		free(spring);
+		spring = temp;
+	}
+
+	ncSprings = NULL;
+}

@@ -13,14 +13,21 @@ typedef struct ncEditorData
 {
     Vector2 anchor01;
 
-    bool WorldGroupBoxActive;
     bool BodyTypeDropdownEditMode;
     int BodyTypeDropdownActive;
-    float MassMinSliderValue;
-    float GravitationSliderValue;
-    float MassMaxSliderValue;
+
+    float MassSliderValue;
     float DampingSliderValue;
     float GravityScaleSliderValue;
+    float SpringStiffnessSliderValue;
+    float RestitutionSliderValue;
+
+    float GravitySliderValue;
+    float GravitationSliderValue;
+    float TimestepSliderValue;
+
+    bool ResetButtonPressed;
+    bool SimulationButtonToggled;
 } ncEditorData_t;
 
 extern ncEditorData_t ncEditorData;
